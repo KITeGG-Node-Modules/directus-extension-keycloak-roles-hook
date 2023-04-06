@@ -1,7 +1,7 @@
 import { copyPermissions } from './copy-permissions'
 
-const masterNames = ['Hfg Offenbach / Staff', 'Hfg Offenbach / Student']
-const delimiter = '/'
+const masterNames = ['BaseRole / Staff', 'BaseRole / Student']
+const delimiter = ' / '
 
 export default ({filter, action}, {services}) => {
   const {ItemsService} = services
