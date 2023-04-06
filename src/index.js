@@ -38,26 +38,34 @@ export default ({filter, action}, {services}) => {
     }
   }
 
-  action('permissions.create', async ({payload, key}, context) => {
-    await updateRole(payload.role, context)
-  })
-  action('permissions.update', async ({payload, keys}, context) => {
+  action('roles.update', async ({keys}, context) => {
     for (const key of keys) {
-      await updateRole(payload.role, context)
+      await updateRole(key, context)
     }
   })
-  filter('permissions.delete', async (keys, meta, context) => {
-    Object.defineProperty(keys, '_roles', { value: [], enumerable: false, writable: true } )
-    for (const key of keys) {
-      const permissionsService = new ItemsService('directus_permissions', context)
-      const permission = await permissionsService.readOne(key)
-      if (permission) keys._roles.push(permission.role)
-    }
-    return keys
-  })
-  action('permissions.delete', async ({keys}, context) => {
-    for (const role of keys._roles) {
-      await updateRole(role, context)
-    }
-  })
+
+  // FIXME: This does not work because each permission operation triggers another complete update
+  //
+  // action('permissions.create', async ({payload, key}, context) => {
+  //   await updateRole(payload.role, context)
+  // })
+  // action('permissions.update', async ({payload, keys}, context) => {
+  //   for (const key of keys) {
+  //     await updateRole(payload.role, context)
+  //   }
+  // })
+  // filter('permissions.delete', async (keys, meta, context) => {
+  //   Object.defineProperty(keys, '_roles', { value: [], enumerable: false, writable: true } )
+  //   for (const key of keys) {
+  //     const permissionsService = new ItemsService('directus_permissions', context)
+  //     const permission = await permissionsService.readOne(key)
+  //     if (permission) keys._roles.push(permission.role)
+  //   }
+  //   return keys
+  // })
+  // action('permissions.delete', async ({keys}, context) => {
+  //   for (const role of keys._roles) {
+  //     await updateRole(role, context)
+  //   }
+  // })
 }
