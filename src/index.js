@@ -1,4 +1,4 @@
-import { copyPermissions } from './copy-permissions'
+import { copyPermissions } from './copy-permissions.js'
 
 const masterNames = ['BaseRole / Staff', 'BaseRole / Student']
 const delimiter = ' / '
