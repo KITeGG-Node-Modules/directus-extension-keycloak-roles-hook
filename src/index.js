@@ -3,7 +3,7 @@ import { copyPermissions } from './copy-permissions.js'
 const masterNames = ['BaseRole / Staff', 'BaseRole / Student', 'BaseRole / Management']
 const delimiter = ' / '
 
-export default ({filter, action}, {services}) => {
+export default ({filter, action}, {services, logger}) => {
   const {ItemsService} = services
 
   async function getMasterRole (key, context) {
@@ -12,10 +12,13 @@ export default ({filter, action}, {services}) => {
     if (masterNames.includes(source.name)) return source
     const suffix = source.name.split(delimiter).pop()
     const masterName = masterNames.find(name => name.endsWith(suffix))
-    const masterRoles = await rolesService.readByQuery({
-      filter: {name: masterName}
-    })
-    return masterRoles.find(role => role.name === masterName)
+    if (masterName) {
+      const masterRoles = await rolesService.readByQuery({
+        filter: {name: masterName}
+      })
+      return masterRoles.find(role => role.name === masterName)
+    }
+    else logger.info(`MasterRole not found for suffix: ${suffix}`)
   }
 
   async function updateRole (key, context) {
