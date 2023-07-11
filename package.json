@@ -1,6 +1,6 @@
 {
-	"name": "kitegg-directus-roles-hook",
-	"description": "Please enter a description for your extension",
+	"name": "directus-extension-keycloak-roles-hook",
+	"description": "Set directus role from keycloak groups",
 	"icon": "extension",
 	"version": "1.0.0",
 	"keywords": [
@@ -10,16 +10,11 @@
 	],
 	"directus:extension": {
 		"type": "hook",
-		"path": "dist/index.js",
+		"path": "src/index.js",
 		"source": "src/index.js",
-		"host": "^9.23.1"
-	},
-	"scripts": {
-		"build": "directus-extension build",
-		"dev": "directus-extension build -w --no-minify",
-		"link": "directus-extension link"
+		"host": "^10.1.5"
 	},
 	"devDependencies": {
-		"@directus/extensions-sdk": "9.23.1"
+		"@directus/extensions-sdk": "10.1.5"
 	}
 }
