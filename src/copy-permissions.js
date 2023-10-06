@@ -6,6 +6,12 @@ const cleanPermission = p => {
   delete copy.role
   return copy
 }
+const comparePermission = p => {
+  return {
+    collection: p.collection,
+    action: p.action
+  }
+}
 const deepEqual = (a, b) => {
   try {
     assert.deepEqual(a, b)
@@ -25,20 +31,25 @@ export async function copyPermissions ({ source, target, ItemsService }, context
     filter: {role: target.id}
   })
   for (const sp of sourcePermissions) {
-    const existsInTarget = targetPermissions.find(tp => {
-      return deepEqual(cleanPermission(sp), cleanPermission(tp))
-    });
-    if (!existsInTarget) {
-      const permission = Object.assign(
-        {role: target.id},
-        cleanPermission(sp)
-      )
-      await permissionsService.createOne(permission)
+    const existingInTarget = targetPermissions.filter(tp => {
+      return deepEqual(comparePermission(sp), comparePermission(tp))
+    })
+    const existsInTarget = existingInTarget.pop()
+    for (const p of existingInTarget) {
+      await permissionsService.deleteOne(p.id)
     }
+    const permission = Object.assign(
+      {
+        role: target.id,
+        id: existsInTarget?.id
+      },
+      cleanPermission(sp)
+    )
+    await permissionsService.upsertOne(permission)
   }
   for (const tp of targetPermissions) {
     const existsInSource = sourcePermissions.find(sp => {
-      return deepEqual(cleanPermission(sp), cleanPermission(tp))
+      return deepEqual(comparePermission(sp), comparePermission(tp))
     });
     if (!existsInSource) {
       await permissionsService.deleteOne(tp.id)
