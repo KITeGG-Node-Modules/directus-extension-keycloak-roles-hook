@@ -21,7 +21,7 @@ const deepEqual = (a, b) => {
     return false
   }
 }
-export async function copyPermissions ({ source, target, ItemsService }, context) {
+export async function copyPermissions ({ source, target, ItemsService, logger }, context) {
   const permissionsService = new ItemsService('directus_permissions', context)
 
   const sourcePermissions = await permissionsService.readByQuery({
@@ -45,6 +45,7 @@ export async function copyPermissions ({ source, target, ItemsService }, context
       },
       cleanPermission(sp)
     )
+    logger.info(`Upsert permission ${permission.collection}/${permission.action} for role: ${permission.role} with ID: ${permission.id}`)
     await permissionsService.upsertOne(permission)
   }
   for (const tp of targetPermissions) {

@@ -38,7 +38,7 @@ export default ({filter, action}, {services, logger}) => {
         logger.info(`Target: ${target.name}`)
         if (target.name.endsWith(suffix)) {
           logger.info(`Target copy: ${target.name}`)
-          await copyPermissions({ source: masterRole, target, ItemsService }, context)
+          await copyPermissions({ source: masterRole, target, ItemsService, logger }, context)
         }
       }
     }
