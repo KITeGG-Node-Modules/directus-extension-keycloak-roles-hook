@@ -30,7 +30,6 @@ export async function copyPermissions ({ source, target, ItemsService, logger },
   const targetPermissions = await permissionsService.readByQuery({
     filter: {role: target.id}
   })
-  logger.info(`Source count ${sourcePermissions.length} / Target count ${targetPermissions.length}`)
   for (const sp of sourcePermissions) {
     const existingInTarget = targetPermissions.filter(tp => {
       return deepEqual(comparePermission(sp), comparePermission(tp))
@@ -46,7 +45,6 @@ export async function copyPermissions ({ source, target, ItemsService, logger },
       },
       cleanPermission(sp)
     )
-    logger.info(`Upsert permission ${permission.collection}/${permission.action} for role: ${permission.role} with ID: ${permission.id}`)
     await permissionsService.upsertOne(permission)
   }
   for (const tp of targetPermissions) {

@@ -18,7 +18,7 @@ export default ({filter, action}, {services, logger}) => {
       })
       return masterRoles.find(role => role.name === masterName)
     }
-    else logger.info(`MasterRole not found for suffix: ${suffix}`)
+    else logger.info(`roles hook: MasterRole not found for suffix: ${suffix}`)
   }
 
   async function updateRole (key, context) {
@@ -26,7 +26,7 @@ export default ({filter, action}, {services, logger}) => {
     const rolesService = new ItemsService('directus_roles', context)
     const masterRole = await getMasterRole(key, context)
     if (masterRole) {
-      logger.info(`MasterRole: ${masterRole.name}`)
+      logger.info(`roles hook: MasterRole: ${masterRole.name}`)
       const suffix = masterRole.name.split(delimiter).pop()
       const targetRoles = await rolesService.readByQuery({
         filter: {
@@ -35,7 +35,7 @@ export default ({filter, action}, {services, logger}) => {
         }
       })
       for (const target of targetRoles) {
-        logger.info(`Target: ${target.name}`)
+        logger.info(`roles hook: Target: ${target.name}`)
         if (target.name.endsWith(suffix)) {
           logger.info(`Target copy: ${target.name}`)
           await copyPermissions({ source: masterRole, target, ItemsService, logger }, context)
