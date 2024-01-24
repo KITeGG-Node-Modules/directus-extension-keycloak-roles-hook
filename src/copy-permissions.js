@@ -25,10 +25,12 @@ export async function copyPermissions ({ source, target, ItemsService, logger },
   const permissionsService = new ItemsService('directus_permissions', context)
 
   const sourcePermissions = await permissionsService.readByQuery({
-    filter: {role: source.id}
+    filter: {role: source.id},
+    limit: -1
   })
   const targetPermissions = await permissionsService.readByQuery({
-    filter: {role: target.id}
+    filter: {role: target.id},
+    limit: -1
   })
   for (const sp of sourcePermissions) {
     const existingInTarget = targetPermissions.filter(tp => {
